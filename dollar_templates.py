@@ -144,7 +144,7 @@ def __parse_if(tokens: list[Token]) -> If:
     l = tokens
     assert l[0].content[:3] == 'if(' and l[0].content[-1:] == ')'
     condition = l.pop(0).content[3:-1]
-    thentree, end = __parse(l, endtokens=['elseif\(.*\)', 'else', 'endif'])
+    thentree, end = __parse(l, endtokens=[r'elseif\(.*\)', 'else', 'endif'])
     if end == 'else':
         elsetree, end = __parse(l, endtokens=['endif'])
     elif end.startswith('elseif('):
@@ -174,9 +174,9 @@ def __parse(tokens: list[Token], endtokens: list[str]=None) -> tuple[Tree,str]:
                 for t in endtokens:
                     if re.fullmatch(t, l[0].content):
                         return (Tree(res), l.pop(0).content)
-            if re.fullmatch('if\(.*\)', l[0].content):
+            if re.fullmatch(r'if\(.*\)', l[0].content):
                 res.append(__parse_if(l))
-            elif re.fullmatch('for\(.*\)', l[0].content):
+            elif re.fullmatch(r'for\(.*\)', l[0].content):
                 res.append(__parse_for(l))
             else:
                 res.append(Var(l.pop(0)))
