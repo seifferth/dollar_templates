@@ -122,13 +122,14 @@ class For(TreeElement):
         if type(data) != list:
             res.append(self.main.apply(setvar(metadata, {'it': data})))
         else:   # type(data) == list
-            for it in data:
+            for i, it in enumerate(data):
                 res.append(self.main.apply(setvar(
                     metadata, {'it': it, self.it: it}
                 )))
-                if self.sep != None: res.append(self.sep.apply(setvar(
-                        metadata, {'it': it, self.it: it}
-                )))
+                if self.sep != None and i < len(data)-1:
+                    res.append(self.sep.apply(setvar(
+                            metadata, {'it': it, self.it: it}
+                    )))
         return "".join(res)
 class Tree(TreeElement):
     def __init__(self, tokens: list[TreeElement]):
