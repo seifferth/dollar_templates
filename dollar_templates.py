@@ -148,12 +148,8 @@ def __parse_if(tokens: list[Token]) -> If:
         elsetree, end = __parse(l, endtokens=['endif'])
     elif end.startswith('elseif('):
         assert end[:4] == 'else'
-        elsearm = [ MetaToken(end[4:]) ]
-        while True:
-            elsearm.append(tokens.pop(0))
-            if type(elsearm[-1]) == MetaToken and \
-               elsearm[-1].content == 'endif': break
-        elsetree, _ = __parse(elsearm)
+        l.insert(0, MetaToken(end[4:]))
+        elsetree, _ = __parse(l, endtokens=['endif'])
     else:
         elsetree = PlainLeaf(PlainToken(''))
     return If(condition, thentree, elsetree)
