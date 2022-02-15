@@ -48,7 +48,7 @@ print(t.apply(metadata_b))
 
 Unit tests are implemented in `test_all.py` and can be executed with
 [pytest](https://pytest.org). Simply install pytest and then execute
-`pytest` command in this directory without arguments.
+the `pytest` command in this directory without arguments.
 
 ## Implementation state
 
