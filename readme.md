@@ -14,6 +14,12 @@ implemented (see below). If you notice differences between pandoc and
 `dollar_templates` concerning features that have been implemented,
 feel free to submit a bug report or even a pull request.
 
+## Installing
+
+This repository uses python setuptools and can be installed with pip. To
+install timesheet into the current user's home directory, for instance,
+you can simply invoke `pip install --user .`.
+
 ## Usage
 
 The easiest way to expand a template with some data is to use the
@@ -67,3 +73,9 @@ Pandoc lists the following features of its templating engine
 
 The list above shows which ones have been implemented in dollar_templates.
 The missing ones might or might not follow in the future.
+
+## License
+
+All files in this repository are made available under the terms of the
+GNU General Purpose License, version 3 or later. A copy of that license
+is included in the repository as `license.txt`.
