@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import sys, yaml
+import sys
 import re
 from typing import Union
 from copy import deepcopy
@@ -199,10 +199,3 @@ def parse_template(template: str) -> Template:
 
 def apply_template(template: str, metadata: dict) -> str:
     return parse_template(template).apply(metadata)
-
-if __name__ == "__main__":
-    with open(sys.argv[1]) as f:
-        template = f.read()
-    with open(sys.argv[2]) as f:
-        metadata = yaml.safe_load(f.read())
-    print(apply_template(template, metadata), end='')
