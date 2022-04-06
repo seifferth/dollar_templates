@@ -38,7 +38,7 @@ To parse the template once and apply it multiple times to different
 data, use the `parse_template` function that returns an object of
 type `dollar_templates.Template`.
 
-```
+```python
 from dollar_templates import parse_template
 
 template = "$for(var)$- $var$\n$endfor$"
