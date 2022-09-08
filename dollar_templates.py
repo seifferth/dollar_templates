@@ -26,6 +26,15 @@ def __tokenize(template: str) -> list[Union[PlainToken, MetaToken]]:
     current_type = "plain"
     while len(l) > 0:
         if current_type == "plain":
+            i = len(l)
+            while i > 10:
+                if '$' not in l[:i]:
+                    current.extend(l[:i])
+                    l = l[i:]
+                    break
+                else:
+                    i = i//2
+            if len(l) == 0: break
             if l[:2] == ['$','$']:          # Literal $
                 current.append("$"); l.pop(0); l.pop(0)
             elif l[:3] == ['$','-','-']:    # Line comment
