@@ -38,9 +38,9 @@ class Var(TreeElement):
         self.name = name
     def apply(self, metadata: dict) -> str:
         val = _getvar(metadata, self.name)
-        if type(val) == list:   return ''.join(val)
+        if type(val) == list:   return ''.join(map(str, val))
         elif type(val) == dict: return 'true'
-        else:                   return val
+        else:                   return str(val)
 class If(TreeElement):
     def __init__(self, condition: str, thenarm: TreeElement, elsearm: TreeElement):
         self.condition = condition
