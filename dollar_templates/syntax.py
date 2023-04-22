@@ -7,7 +7,7 @@ def _getvar(metadata: dict, varname: str) -> _Union[str,list,dict]:
     d = metadata
     for key in varname.split('.'):
         try:
-            d = d.get(key, '')
+            d = d.__getitem__(key)
         except:
             return ''
     return d
