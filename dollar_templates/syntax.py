@@ -6,9 +6,10 @@ from copy import deepcopy
 def _getvar(metadata: dict, varname: str) -> _Union[str,list,dict]:
     d = metadata
     for key in varname.split('.'):
-        if type(d) != dict: return ''
-        d = d.get(key, '')
-    if type(d) not in (list,dict): d = str(d)
+        try:
+            d = d.get(key, '')
+        except:
+            return ''
     return d
 def _setvar(metadata: dict, newvars: dict) -> dict:
     newdict = deepcopy(metadata)
