@@ -23,47 +23,26 @@ def tokenize(template: str) -> list[Token]:
     meaning according to the template syntax, such as $var$, $if(var)$,
     $for(var)$, $endfor$ or $endif$.
     """
-    def split_list(l: list, char: str) -> tuple[list,list]:
-        """
-        Returns two lists. The first list is the one containing everything
-        up to (but excluding) char, the second one is possibly empty;
-        but if it is not empty, it holds char at index 0 as well as
-        whatever follows char in the original list.
-        """
-        try:
-            next = l.index(char)
-            part = l[:next]; l = l[next:]
-        except ValueError:
-            part = l; l = []
-        return part, l
-    l = list(template)
+    def split_at(string: str, sep: str) -> tuple[str,str]:
+        if sep not in string:
+            return string, ""
+        return string.split(sep, 1)
     current = list()
-    while len(l) > 0:
-        head, l = split_list(l, '$')
-        current.extend(head)
-        if len(l) == 0: break
-        if l[:2] == ['$','$']:          # Literal $
-            current.append("$"); l.pop(0); l.pop(0)
-        elif l[:3] == ['$','-','-']:    # Line comment
-            head, l = split_list(l, '\n')
-            l.pop(0)
-        elif l[:2] == ['$', '{']:
-            l.pop(0); l.pop(0)
-            yield PlainToken("".join(current))
-            current = list()
-            head, l = split_list(l, '}')
-            yield MetaToken("".join(head))
-            l.pop(0)
-        elif l[:1] == ['$']:
-            l.pop(0)
-            yield PlainToken("".join(current))
-            current = list()
-            head, l = split_list(l, '$')
-            yield MetaToken("".join(head))
-            l.pop(0)
-        else:
-            raise Exception('Internal Error: This branch should never '
-                            'be executed. There is probably something '
-                            'wrong with the optimization for long plain '
-                            'contents at the beginning of this loop.')
-    yield PlainToken("".join(current))
+    rest = template
+    while len(rest) > 0:
+        head, rest = split_at(rest, '$')
+        current.append(head)
+        if rest[:1] == '$':             # Literal $
+            current.append("$");
+            rest = rest[1:]
+        elif rest[:2] == '--':          # Line comment
+            _head, rest = split_at(rest, '\n')
+        elif rest[:1] == '{':
+            yield PlainToken("".join(current)); current = list()
+            head, rest = split_at(rest[1:], '}')
+            yield MetaToken(head)
+        else:                           # Dollar-enclosed MetaToken
+            yield PlainToken("".join(current)); current = list()
+            head, rest = split_at(rest, '$')
+            yield MetaToken(head)
+    if current: yield PlainToken("".join(current))
