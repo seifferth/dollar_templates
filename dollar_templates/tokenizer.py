@@ -28,16 +28,13 @@ def tokenize(template: str) -> list[Token]:
     current_type = "plain"
     while len(l) > 0:
         if current_type == "plain":
-            if l[0] != '$':
-                i = len(l)
-                while i > 1:
-                    if '$' not in l[:i]:
-                        current.extend(l[:i])
-                        l = l[i:]
-                        break
-                    else:
-                        i = i//2
-                if len(l) == 0: break
+            try:
+                next_dollar = l.index('$')
+            except ValueError:
+                current.extend(l)
+                l = []; break
+            current.extend(l[:next_dollar])
+            l = l[next_dollar:]
             if l[:2] == ['$','$']:          # Literal $
                 current.append("$"); l.pop(0); l.pop(0)
             elif l[:3] == ['$','-','-']:    # Line comment
