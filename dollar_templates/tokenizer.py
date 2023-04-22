@@ -47,39 +47,28 @@ def tokenize(template: str) -> list[Token]:
             if l[:2] == ['$','$']:          # Literal $
                 current.append("$"); l.pop(0); l.pop(0)
             elif l[:3] == ['$','-','-']:    # Line comment
-                while l[0] != '\n':
-                    l.pop(0)
+                head, l = split_list(l, '\n')
                 l.pop(0)
             elif l[:2] == ['$', '{']:
                 l.pop(0); l.pop(0)
                 yield PlainToken("".join(current))
                 current = list()
-                current_type = "meta_curly"
+                head, l = split_list(l, '}')
+                yield MetaToken("".join(head))
+                l.pop(0)
+                current_type = "plain"
             elif l[:1] == ['$']:
                 l.pop(0)
                 yield PlainToken("".join(current))
                 current = list()
-                current_type = "meta"
+                head, l = split_list(l, '$')
+                yield MetaToken("".join(head))
+                l.pop(0)
+                current_type = "plain"
             else:
                 raise Exception('Internal Error: This branch should never '
                                 'be executed. There is probably something '
                                 'wrong with the optimization for long plain '
                                 'contents at the beginning of this loop.')
-        elif current_type == "meta":
-            if l[0] != "$":
-                current.append(l.pop(0))
-            else:   # l[0] == "$"
-                l.pop(0)
-                yield MetaToken("".join(current).strip())
-                current = list()
-                current_type = "plain"
-        elif current_type == "meta_curly":
-            if l[0] != "}":
-                current.append(l.pop(0))
-            else:   # l[0] == "}"
-                l.pop(0)
-                yield MetaToken("".join(current).strip())
-                current = list()
-                current_type = "plain"
     yield PlainToken("".join(current)) if current_type == "plain" else \
           MetaToken("".join(current))
