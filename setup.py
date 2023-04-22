@@ -5,7 +5,7 @@ with open('readme.md', 'r', encoding='utf-8') as f:
 
 setup(
     name='dollar_templates',
-    version='0.0.0-dev',
+    version='1.0.0',
     packages=['dollar_templates'],
     python_requires='>=3.9',
     author='Frank Seifferth',
