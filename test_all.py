@@ -84,3 +84,7 @@ def test_006():
     t = '$for(array)$$array$$sep$, $endfor$'
     m = {'array': [1,2,3,4]}
     assert apply_template(t, m) == '1, 2, 3, 4'
+
+def test_007():
+    t = '$if(something)$something$endif$'
+    assert apply_template(t, dict()) == ''

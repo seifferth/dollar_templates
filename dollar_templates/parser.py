@@ -18,7 +18,7 @@ def __parse_if(tokens: list[Token]) -> If:
         l.insert(0, MetaToken(end[4:]))
         elsetree, _ = __parse(l, endtokens=['endif'])
     else:
-        elsetree = Str(PlainToken(''))
+        elsetree = Str('')
     return If(condition, thentree, elsetree)
 def __parse_for(tokens: list[Token]) -> For:
     l = tokens
