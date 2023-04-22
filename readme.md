@@ -18,7 +18,9 @@ feel free to submit a bug report or even a pull request.
 
 This repository uses python setuptools and can be installed with pip.
 To install dollar_templates into the current user's home directory, for
-instance, you can simply invoke `pip install --user .`.
+instance, you can simply invoke `pip install --user .`. Also note that
+a stable version of this python module is available at pypi. To install
+the stable version, simply run `pip install --user dollar-templates`.
 
 ## Usage
 
