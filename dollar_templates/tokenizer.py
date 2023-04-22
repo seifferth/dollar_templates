@@ -38,37 +38,32 @@ def tokenize(template: str) -> list[Token]:
         return part, l
     l = list(template)
     current = list()
-    current_type = "plain"
     while len(l) > 0:
-        if current_type == "plain":
+        head, l = split_list(l, '$')
+        current.extend(head)
+        if len(l) == 0: break
+        if l[:2] == ['$','$']:          # Literal $
+            current.append("$"); l.pop(0); l.pop(0)
+        elif l[:3] == ['$','-','-']:    # Line comment
+            head, l = split_list(l, '\n')
+            l.pop(0)
+        elif l[:2] == ['$', '{']:
+            l.pop(0); l.pop(0)
+            yield PlainToken("".join(current))
+            current = list()
+            head, l = split_list(l, '}')
+            yield MetaToken("".join(head))
+            l.pop(0)
+        elif l[:1] == ['$']:
+            l.pop(0)
+            yield PlainToken("".join(current))
+            current = list()
             head, l = split_list(l, '$')
-            current.extend(head)
-            if len(l) == 0: break
-            if l[:2] == ['$','$']:          # Literal $
-                current.append("$"); l.pop(0); l.pop(0)
-            elif l[:3] == ['$','-','-']:    # Line comment
-                head, l = split_list(l, '\n')
-                l.pop(0)
-            elif l[:2] == ['$', '{']:
-                l.pop(0); l.pop(0)
-                yield PlainToken("".join(current))
-                current = list()
-                head, l = split_list(l, '}')
-                yield MetaToken("".join(head))
-                l.pop(0)
-                current_type = "plain"
-            elif l[:1] == ['$']:
-                l.pop(0)
-                yield PlainToken("".join(current))
-                current = list()
-                head, l = split_list(l, '$')
-                yield MetaToken("".join(head))
-                l.pop(0)
-                current_type = "plain"
-            else:
-                raise Exception('Internal Error: This branch should never '
-                                'be executed. There is probably something '
-                                'wrong with the optimization for long plain '
-                                'contents at the beginning of this loop.')
-    yield PlainToken("".join(current)) if current_type == "plain" else \
-          MetaToken("".join(current))
+            yield MetaToken("".join(head))
+            l.pop(0)
+        else:
+            raise Exception('Internal Error: This branch should never '
+                            'be executed. There is probably something '
+                            'wrong with the optimization for long plain '
+                            'contents at the beginning of this loop.')
+    yield PlainToken("".join(current))
