@@ -88,3 +88,33 @@ def test_006():
 def test_007():
     t = '$if(something)$something$endif$'
     assert apply_template(t, dict()) == ''
+
+def test_008():
+    t = '${if(var)}Var is $var$.${endif}'
+    m = {'var': 'value'}
+    assert apply_template(t, m) == 'Var is value.'
+
+def test_009():
+    t = '${if(var)}Var is ${var}.${endif}'
+    m = {'var': 'value'}
+    assert apply_template(t, m) == 'Var is value.'
+
+def test_009():
+    t = '${if(var)} Var is ${var}.  ${endif}'
+    m = {'var': 'value'}
+    assert apply_template(t, m) == ' Var is value.  '
+
+def test_010():
+    t = '${  if(var)  }Var is ${  var }.${   endif  }'
+    m = {'var': 'value'}
+    assert apply_template(t, m) == 'Var is value.'
+
+def test_011():
+    t = '$  if(var)  $Var is $  var $.$   endif  $'
+    m = {'var': 'value'}
+    assert apply_template(t, m) == 'Var is value.'
+
+def test_012():
+    t = '$  if(var)  $ Var is $  var $ .  $   endif  $'
+    m = {'var': 'value'}
+    assert apply_template(t, m) == ' Var is value .  '

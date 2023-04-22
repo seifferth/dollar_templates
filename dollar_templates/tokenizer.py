@@ -40,9 +40,9 @@ def tokenize(template: str) -> list[Token]:
         elif rest[:1] == '{':
             yield PlainToken("".join(current)); current = list()
             head, rest = split_at(rest[1:], '}')
-            yield MetaToken(head)
+            yield MetaToken(head.strip())
         else:                           # Dollar-enclosed MetaToken
             yield PlainToken("".join(current)); current = list()
             head, rest = split_at(rest, '$')
-            yield MetaToken(head)
+            yield MetaToken(head.strip())
     if current: yield PlainToken("".join(current))
